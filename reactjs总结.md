@@ -68,12 +68,15 @@ getTodoItem() {
 
   // 版本三
   // setState中的函数可以接收一个参数prevState, prevState等价于修改之前的数据,
+  // setState还可以接受一个函数作为参数,回调函数,表示第一个函数执行完成后在执行的函数
   prevState <==> this.state
   this.setState( (prevState) => ({
     // list: [...this.state.list, this.state.inputDate],
     list: [...prevState.list, prevState.inputDate],
     inputDate: ''
-  }) )
+  }), () => {
+    console.log("回调函数")
+  }  )
 ```
 
 
@@ -130,3 +133,88 @@ ListItem.defaultProps = {
 > 当组件中的state或者props发生改变的时候,render函数就会重新执行(重)
 >
 > 当父组件的render函数被运行时,它的子组件的render都将被重新运行
+
+
+
+## 生命周期
+
+> 生命周期函数, 是指在某一时刻组件会自动调用执行的函数.
+
+![生命周期图](react生命周期.PNG)
+
+### Mounting
+
+```js
+// 在组件即将被挂载到页面的时刻自动执行
+componentWillMount(){
+  console.log('componentWillMount');
+}
+
+/*----------------------------------------------*/
+
+// 组件被挂载到页面之后，自动被执行
+componentDidMount() {
+  console.log('componentDidMount')
+}
+```
+
+### Updation
+
+```js
+// 组件被更新之前，他会自动被执行
+// 翻译: 组件需要被更新么?返回true,则需要;返回false,则不需要
+shouldComponentUpdate() {
+  console.log('shouldComponentUpdate')
+  return true
+}
+```
+
++ 更新state
+
+```JS
+// 组件被更新之前，它会自动执行，但是他在shouldComponentUpdate之后被执行，
+// 如果shouldComponentUpdate返回true它才执行
+// 如果返回false，这个函数就不会被执行了
+componentWillUpdate() {
+  console.log('componentWillUpdate')
+}
+
+/*-------------------------------------------------------------------------*/
+
+// 组件更新完成之后，他会被执行
+componentDidUpdate() {
+  console.log('componentDidUpdate')
+}
+```
+
++ 更新props
+
+```js
+// 一个组件要从父组件接受参数
+// 只要父组件的render函数被重新执行,子组件的这个生命周期函数就会被执行
+// 如果这个组件第一次存在于父组件中，不会执行
+// 如果这个组件之前已经存在于父组件中，才会执行
+componentWillReceiveProps() {
+  console.log('child componentWillReceiveProps')
+}
+```
+
+### Unmounting
+
+```js
+// 当这个组件即将被从页面中剔除的时候，会被执行
+componentWillUnmount() {
+  console.log('child componentWillUnmount')
+}
+```
+
+
+
+
+
+
+
+
+
+
+
