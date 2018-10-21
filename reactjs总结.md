@@ -1,3 +1,32 @@
+## react渲染过程
+
+1. state 数据
+
+2. JSX 模版
+
+
+3. 数据 + 模版 生成虚拟DOM（虚拟DOM就是一个JS对象，用它来描述真实DOM）（损耗了性能）['div', {id: 'abc'}, ['span', {}, 'hello world']]
+
+
+4. 用虚拟DOM的结构生成真实的DOM，来显示 <div id='abc'><span>hello world</span></div>
+
+
+5. state 发生变化
+
+
+6. 数据 + 模版 生成新的虚拟DOM （极大的提升了性能）['div', {id: 'abc'}, ['span', {}, 'bye bye']]
+
+
+7. 比较原始虚拟DOM和新的虚拟DOM的区别，找到区别是span中内容（极大的提升性能）
+
+
+8. 直接操作DOM，改变span中的内容优点：
+
+   1. 性能提升了。
+   2. 它使得跨端应用得以实现。React Native
+
+
+
 ## 组件中的传值
 
 + 父组件给子组件传值
@@ -136,6 +165,26 @@ ListItem.defaultProps = {
 
 
 
+## ref
+
+```js
+<input
+    id="insertArea"
+    value={this.state.inputDate}
+    onChange={this.inputToList}
+    // 构建一个ref引用,这个引用叫this.input,指向input对应的dom节点,
+    // this.input指向当前的input  DOM
+    // 函数的参数便是dom
+    // ref帮助我们在react中获取dom
+    // 建议不要使用ref
+    ref={input => {
+       this.input = input
+    }}
+/>
+```
+
+
+
 ## 生命周期
 
 > 生命周期函数, 是指在某一时刻组件会自动调用执行的函数.
@@ -209,6 +258,32 @@ componentWillUnmount() {
 ```
 
 
+
+## 生命周期函数的使用场景
+
+```js
+// 数据更新时(子组件中的props)
+// nextProps: 接下来我的props会变化成什么样
+// nextState: 接下来我的state会变化成什么样
+shouldComponentUpdate(nextProps, nextState) {
+  // 我当前组件里 接下来的content 与 之前的props的content的值不一样,
+  // 说明组件里的props发生了变化,则组件需要被渲染
+  if (nextProps.content !== this.props.content) {
+    return true
+  } else {
+    return false
+  }
+}
+```
+
+```js
+// ajax 请求数据
+componentDidMount() {
+  axios.get('/api/todolist')
+    .then(()=>{alert('succ')})
+    .catch(()=>{alert('error')})
+}
+```
 
 
 
